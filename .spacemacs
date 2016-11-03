@@ -53,7 +53,6 @@
                  typescript-fmt-on-save t
                  typescript-fmt-tool 'typescript-formatter)
      java
-     markdown
      html
      emacs-lisp
      lua
@@ -74,7 +73,7 @@
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     shell-script
+     shell-scripts
      ;; spell-checking
      syntax-checking
      ;; version-control
