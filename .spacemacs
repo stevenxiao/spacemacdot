@@ -299,8 +299,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq eclim-eclipse-dirs '("/home/xiaoxi/eclipse"))
-  (setq eclim-execute '("/home/xiaoxi/eclipse/eclim"))
+  (setq eclim-eclipse-dirs '("/home/xiaoxi/eclipse")
+    eclim-execute "/home/xiaoxi/eclipse/eclim")
+    
   (global-set-key [C-M-tab] 'clang-format-region)
   (add-hook 'c++-mode-hook 'clang-format-bindings)
   (defun clang-format-bindings ()
