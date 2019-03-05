@@ -22,34 +22,66 @@
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      auto-completion
+     better-defaults
+     (treemacs :variables
+               treemacs-use-follow-mode t
+               treemacs-use-filewatch-mode t
+               treemacs-collapse-dirs 3
+               treemacs-lock-width t)
+     lsp
      (python :variables
              python-shell-interpreter "ipython"
              python-shell-interpreter-args "i"
+             ;;python-backend 'lsp
              python-enable-yapf-format-on-save t
              python-sort-imports-on-save t
              python-fill-column 99)
      django
      react
      (c-c++ :variables
+            c-c++-backend 'lsp-ccls
+            c-c++-lsp-cache-dir "~/.cache/ccls"
+            c-c++-lsp-sem-highlight-method 'overlay
+            c-c++-lsp-sem-highlight-rainbow t
+            c-c++-enable-clang-support nil
             c-c++-default-mode-for-headers 'c++-mode
-            c-c++-enable-clang-support t)
+            c-c++-enable-clang-format-on-save t
+            c-c++-enable-google-style t
+            ;;c-c++-enable-google-newline t
+            )
+     semantic
      cscope
      gtags
      common-lisp
+
      (go :variables
          go-tab-width 4
+         go-format-before-save t
+         go-use-golangci-lint t
          gofmt-command "goimports")
-     rust
+
+     (rust :variables
+           rust-backend 'lsp
+           rust-format-on-save t)
+
      (scala :variables
             scala-indent:use-javadoc-style t
             scala-use-java-doc-style t
             scala-auto-insert-asterisk-in-comments t
             scala-use-unicode-arrows t
             scala-auto-start-ensime t)
-     shaders
+
+     web-beautify
+     
      (javascript :variables
-                 javascript-disable-tern-port-files nil)
+                 javascript-backend 'tern
+                 js2-basic-offset 2
+                 js-indent-level 2
+                 javascript-fmt-tool 'web-beautify
+                 node-add-modules-path t)
+
      (typescript :variables
+                 typescript-backend 'lsp
                  typescript-fmt-on-save t
                  typescript-fmt-tool 'typescript-formatter)
      java
@@ -58,12 +90,15 @@
      lua
      octave
      markdown
-     graphviz
+     ;;graphviz
      asm
      asciidoc
      (colors :variables
              colors-colorize-identifiers 'all
-             colors-enable-nyan-cat-progress-bar t)
+             colors-default-rainbow-identifiers-light 86
+             colors-default-rainbow-identifiers-sat 42)
+     pdf
+     epub
      pandoc
      (org :variables
           org-enable-github-support t
@@ -79,11 +114,11 @@
      ;; version-control
      git
      github
-     (latex :variables
-            latex-build-command "LaTex"
-            latex-enable-auto-fill t
-            latex-enable-folding t)
-     bibtex
+     ;;(latex :variables
+     ;;       latex-build-command "LaTex"
+     ;;       latex-enable-auto-fill t
+     ;;       latex-enable-folding t)
+     ;;bibtex
 
      )
    ;; List of additional packages that will be installed without being
@@ -145,12 +180,11 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
+   dotspacemacs-themes '(monokai
                          solarized-light
                          solarized-dark
                          leuven
-                         monokai
+                         ;;monokai
                          zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -256,7 +290,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'text-mode
+   dotspacemacs-line-numbers 'relative
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -299,9 +333,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq eclim-eclipse-dirs '("/home/xiaoxi/eclipse")
-    eclim-execute "/home/xiaoxi/eclipse/eclim")
-    
+  ;;(setq eclim-eclipse-dirs '("/home/xiaoxi/eclipse")
+  ;;  eclim-execute "/home/xiaoxi/eclipse/eclim")
   (global-set-key [C-M-tab] 'clang-format-region)
   (add-hook 'c++-mode-hook 'clang-format-bindings)
   (defun clang-format-bindings ()
@@ -311,6 +344,8 @@ you should place your code here."
     (require 'org-projectile)
     (push (org-projectile:todo-files) org-agenda-files))
   (setq spaceline-org-clock-p t)
+  (spacemacs/toggle-highlight-current-line-globally-off)
+  (setq x86-lookup-pdf "~/intel-developer-manual-vol2.pdf")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -329,3 +364,23 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (stickyfunc-enhance srefactor graphviz-dot-mode x86-lookup rainbow-mode rainbow-identifiers pony-mode pandoc-mode ox-twbs ox-reveal ox-pandoc ox-gfm org-ref key-chord ivy nasm-mode magit-gh-pulls helm-gtags helm-cscope xcscope helm-bibtex parsebib github-search github-clone github-browse-file gist gh marshal logito ht ggtags company-auctex color-identifiers-mode biblio biblio-core auctex adoc-mode markup-faces web-mode tide typescript-mode tagedit slim-mode scss-mode sass-mode pug-mode noflet lua-mode less-css-mode helm-css-scss haml-mode glsl-mode ensime sbt-mode scala-mode emmet-mode company-web web-completion-data smeargle orgit magit-gitflow helm-gitignore gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor yapfify xterm-color ws-butler window-numbering which-key web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toml-mode toc-org spacemacs-theme spaceline slime-company shell-pop restart-emacs request rainbow-delimiters racer quelpa pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file neotree multi-term move-text mmm-mode markdown-toc lorem-ipsum livid-mode live-py-mode linum-relative link-hint json-mode js2-refactor js-doc info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio go-guru go-eldoc gnuplot gh-md flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav dumb-jump disaster define-word cython-mode company-tern company-statistics company-go company-emacs-eclim company-c-headers company-anaconda common-lisp-snippets column-enforce-mode coffee-mode cmake-mode clean-aindent-mode clang-format cargo auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
